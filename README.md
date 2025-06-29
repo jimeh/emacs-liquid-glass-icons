@@ -56,7 +56,7 @@ Grab the `Assets.car` from the `Resources` directory, and place it into
 
 Then edit `Contents/Info.plist`, and add the following:
 
-```plist
+```xml
 <key>CFBundleIconName</key>
 <string>EmacsLG1</string>
 ```
