@@ -51,7 +51,7 @@ On macOS 26, the icons support light/dark mode, clear glass mode, and custom
 color tints as well. However, this works a bit different from the old `.icns`
 files.
 
-Grab the `Assets.car` from the `Resources` directory, and place it into
+Grab the `Assets.car` file from the `Resources` directory, and place it into
 `Contents/Resources` within your Emacs.app.
 
 Then edit `Contents/Info.plist`, and add the following:
