@@ -12,37 +12,16 @@
   </strong>
 </p>
 
+## Overview
+
 Created with Apple's new [Icon Composer][] application, using SVG shapes
-extracted from the official [emacs.svg][] image included in Emacs' sources.
+extracted from [emacs.svg][] image included in Emacs' sources.
 
 [Icon Composer]: https://developer.apple.com/icon-composer/
 [emacs.svg]: https://github.com/emacs-mirror/emacs/blob/emacs-30.1/etc/images/icons/hicolor/scalable/apps/emacs.svg
 
 A series of `*.icns` files are provided for macOS 15 and earlier, and a
 `Assets.car` file is provided for macOS 26 and later.
-
-## The Icons
-
-### EmacsLG1
-
-EmacsLG1 simplifies and changes the outer shape of the default icon to comply
-with the shape of Liquid Glass icons.
-
-![EmacsLG1 Preview](https://raw.githubusercontent.com/jimeh/emacs-liquid-glass-icons/refs/heads/main/img/preview-lg1.png)
-
-### EmacsLG2
-
-EmacsLG2 stays as close to the original round icon as possible, while giving it
-that Liquid Glass flair.
-
-![EmacsLG1 Preview](https://raw.githubusercontent.com/jimeh/emacs-liquid-glass-icons/refs/heads/main/img/preview-lg2.png)
-
-### EmacsLG3
-
-EmacsLG3 is the biggest divergence from Emacs' default icon, and is inspired by
-the changes Apple has made to some of its own icons in macOS 26.
-
-![EmacsLG1 Preview](https://raw.githubusercontent.com/jimeh/emacs-liquid-glass-icons/refs/heads/main/img/preview-lg3.png)
 
 ## Usage
 
@@ -75,3 +54,26 @@ icon you want to use. All three are bundled into the `Assets.car` file.
 
 The existing `Contents/Resources/Emacs.icns` file with Emacs' default icon can
 be left alone.
+
+## The Icons
+
+### EmacsLG1
+
+EmacsLG1 simplifies and changes the outer shape of the default icon to comply
+with the shape of Liquid Glass icons.
+
+![EmacsLG1 Preview](https://raw.githubusercontent.com/jimeh/emacs-liquid-glass-icons/refs/heads/main/img/preview-lg1.png)
+
+### EmacsLG2
+
+EmacsLG2 stays as close to the original round icon as possible, while giving it
+that Liquid Glass flair.
+
+![EmacsLG1 Preview](https://raw.githubusercontent.com/jimeh/emacs-liquid-glass-icons/refs/heads/main/img/preview-lg2.png)
+
+### EmacsLG3
+
+EmacsLG3 is the biggest divergence from Emacs' default icon, and is inspired by
+the changes Apple has made to some of its own icons in macOS 26.
+
+![EmacsLG1 Preview](https://raw.githubusercontent.com/jimeh/emacs-liquid-glass-icons/refs/heads/main/img/preview-lg3.png)
