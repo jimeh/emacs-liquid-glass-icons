@@ -17,6 +17,12 @@
       "blur-material" : null,
       "layers" : [
         {
+          "fill-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : "none"
+            }
+          ],
           "glass" : false,
           "image-name" : "e.svg",
           "name" : "e"
@@ -47,15 +53,37 @@
       "blur-material" : null,
       "layers" : [
         {
-          "image-name" : "base.svg",
-          "name" : "base",
+          "fill-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : "none"
+            },
+            {
+              "appearance" : "tinted",
+              "value" : {
+                "automatic-gradient" : "srgb:0.26052,0.26052,0.26052,1.00000"
+              }
+            }
+          ],
+          "image-name" : "bg.svg",
+          "name" : "bg",
           "opacity-specializations" : [
             {
               "appearance" : "dark",
-              "value" : 0.9
+              "value" : 0.8
             }
           ],
           "position-specializations" : [
+            {
+              "idiom" : "square",
+              "value" : {
+                "scale" : 1,
+                "translation-in-points" : [
+                  0,
+                  0
+                ]
+              }
+            },
             {
               "idiom" : "watchOS",
               "value" : {

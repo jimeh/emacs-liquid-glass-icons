@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		4AAA77FE2E1083B300EB069C /* EmacsLG.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EmacsLG.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4AFAD98D2E1096EA0059D3E8 /* EmacsLG.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EmacsLG.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		4AAA78002E1083B300EB069C /* EmacsLG */ = {
+		4AFAD98F2E1096EA0059D3E8 /* EmacsLG */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = EmacsLG;
 			sourceTree = "<group>";
@@ -19,7 +19,7 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		4AAA77FB2E1083B300EB069C /* Frameworks */ = {
+		4AFAD98A2E1096EA0059D3E8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -29,18 +29,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4AAA77F52E1083B300EB069C = {
+		4AFAD9842E1096EA0059D3E8 = {
 			isa = PBXGroup;
 			children = (
-				4AAA78002E1083B300EB069C /* EmacsLG */,
-				4AAA77FF2E1083B300EB069C /* Products */,
+				4AFAD98F2E1096EA0059D3E8 /* EmacsLG */,
+				4AFAD98E2E1096EA0059D3E8 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		4AAA77FF2E1083B300EB069C /* Products */ = {
+		4AFAD98E2E1096EA0059D3E8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4AAA77FE2E1083B300EB069C /* EmacsLG.app */,
+				4AFAD98D2E1096EA0059D3E8 /* EmacsLG.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,64 +48,64 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		4AAA77FD2E1083B300EB069C /* EmacsLG */ = {
+		4AFAD98C2E1096EA0059D3E8 /* EmacsLG */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4AAA78092E1083B400EB069C /* Build configuration list for PBXNativeTarget "EmacsLG" */;
+			buildConfigurationList = 4AFAD9982E1096EB0059D3E8 /* Build configuration list for PBXNativeTarget "EmacsLG" */;
 			buildPhases = (
-				4AAA77FA2E1083B300EB069C /* Sources */,
-				4AAA77FB2E1083B300EB069C /* Frameworks */,
-				4AAA77FC2E1083B300EB069C /* Resources */,
+				4AFAD9892E1096EA0059D3E8 /* Sources */,
+				4AFAD98A2E1096EA0059D3E8 /* Frameworks */,
+				4AFAD98B2E1096EA0059D3E8 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				4AAA78002E1083B300EB069C /* EmacsLG */,
+				4AFAD98F2E1096EA0059D3E8 /* EmacsLG */,
 			);
 			name = EmacsLG;
 			packageProductDependencies = (
 			);
 			productName = EmacsLG;
-			productReference = 4AAA77FE2E1083B300EB069C /* EmacsLG.app */;
+			productReference = 4AFAD98D2E1096EA0059D3E8 /* EmacsLG.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		4AAA77F62E1083B300EB069C /* Project object */ = {
+		4AFAD9852E1096EA0059D3E8 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2600;
 				LastUpgradeCheck = 2600;
 				TargetAttributes = {
-					4AAA77FD2E1083B300EB069C = {
+					4AFAD98C2E1096EA0059D3E8 = {
 						CreatedOnToolsVersion = 26.0;
 					};
 				};
 			};
-			buildConfigurationList = 4AAA77F92E1083B300EB069C /* Build configuration list for PBXProject "EmacsLG" */;
+			buildConfigurationList = 4AFAD9882E1096EA0059D3E8 /* Build configuration list for PBXProject "EmacsLG" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = 4AAA77F52E1083B300EB069C;
+			mainGroup = 4AFAD9842E1096EA0059D3E8;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 4AAA77FF2E1083B300EB069C /* Products */;
+			productRefGroup = 4AFAD98E2E1096EA0059D3E8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4AAA77FD2E1083B300EB069C /* EmacsLG */,
+				4AFAD98C2E1096EA0059D3E8 /* EmacsLG */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		4AAA77FC2E1083B300EB069C /* Resources */ = {
+		4AFAD98B2E1096EA0059D3E8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -115,7 +115,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		4AAA77FA2E1083B300EB069C /* Sources */ = {
+		4AFAD9892E1096EA0059D3E8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -125,7 +125,7 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		4AAA78072E1083B400EB069C /* Debug */ = {
+		4AFAD9962E1096EB0059D3E8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -188,7 +188,7 @@
 			};
 			name = Debug;
 		};
-		4AAA78082E1083B400EB069C /* Release */ = {
+		4AFAD9972E1096EB0059D3E8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -243,11 +243,12 @@
 			};
 			name = Release;
 		};
-		4AAA780A2E1083B400EB069C /* Debug */ = {
+		4AFAD9992E1096EB0059D3E8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = EmacsLG1;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -272,11 +273,12 @@
 			};
 			name = Debug;
 		};
-		4AAA780B2E1083B400EB069C /* Release */ = {
+		4AFAD99A2E1096EB0059D3E8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = EmacsLG1;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -304,25 +306,25 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4AAA77F92E1083B300EB069C /* Build configuration list for PBXProject "EmacsLG" */ = {
+		4AFAD9882E1096EA0059D3E8 /* Build configuration list for PBXProject "EmacsLG" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4AAA78072E1083B400EB069C /* Debug */,
-				4AAA78082E1083B400EB069C /* Release */,
+				4AFAD9962E1096EB0059D3E8 /* Debug */,
+				4AFAD9972E1096EB0059D3E8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4AAA78092E1083B400EB069C /* Build configuration list for PBXNativeTarget "EmacsLG" */ = {
+		4AFAD9982E1096EB0059D3E8 /* Build configuration list for PBXNativeTarget "EmacsLG" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4AAA780A2E1083B400EB069C /* Debug */,
-				4AAA780B2E1083B400EB069C /* Release */,
+				4AFAD9992E1096EB0059D3E8 /* Debug */,
+				4AFAD99A2E1096EB0059D3E8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 4AAA77F62E1083B300EB069C /* Project object */;
+	rootObject = 4AFAD9852E1096EA0059D3E8 /* Project object */;
 }
