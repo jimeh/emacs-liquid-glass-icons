@@ -8,3 +8,6 @@ Hence, this is a blank macOS app Xcode project, with only the LG icons added.
 
 We extract the `Assets.car` file by building the application and grabbing it
 from `Contents/Resources` within the built EmacsLG application.
+
+The `*.icon` Icon Composer documents within the Xcode project are duplicates of
+those in the top-level Icons directory.
