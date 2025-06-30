@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/jimeh/emacs-liquid-glass-icons/compare/v1.0.0...v1.0.1) (2025-06-30)
+
+
+### Bug Fixes
+
+* **license:** add missing license ([#4](https://github.com/jimeh/emacs-liquid-glass-icons/issues/4)) ([e2880e5](https://github.com/jimeh/emacs-liquid-glass-icons/commit/e2880e5541e31e8dcbf56d46933140d505f39409))
+
 ## 1.0.0 (2025-06-29)
 
 
