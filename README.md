@@ -77,3 +77,12 @@ EmacsLG3 is the biggest divergence from Emacs' default icon, and is inspired by
 the changes Apple has made to some of its own icons in macOS 26.
 
 ![EmacsLG1 Preview](https://raw.githubusercontent.com/jimeh/emacs-liquid-glass-icons/refs/heads/main/img/preview-lg3.png)
+
+## License
+
+Licensed under GPL-3.0-or-later (see `LICENSE.md`).
+
+These icons are derivative works of [emacs.svg][], which is [licensed under
+GPL-3.0-or-later][upstream-license].
+
+[upstream-license]: https://github.com/emacs-mirror/emacs/blob/emacs-30.1/etc/images/icons/README
