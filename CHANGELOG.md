@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.0](https://github.com/jimeh/emacs-liquid-glass-icons/compare/v1.0.1...v1.1.0) (2025-10-18)
+
+
+### Features
+
+* **build:** automate Assets.car creation ([#7](https://github.com/jimeh/emacs-liquid-glass-icons/issues/7)) ([9e7c5ac](https://github.com/jimeh/emacs-liquid-glass-icons/commit/9e7c5ac3ae0ed0be9d72aba996fcc5fe99dea95a))
+* **build:** automate legacy *.icns icon creation ([#10](https://github.com/jimeh/emacs-liquid-glass-icons/issues/10)) ([587aa4f](https://github.com/jimeh/emacs-liquid-glass-icons/commit/587aa4f0130ae8f4a68d6e8945be517e44614eed))
+
 ## [1.0.1](https://github.com/jimeh/emacs-liquid-glass-icons/compare/v1.0.0...v1.0.1) (2025-06-30)
 
 
