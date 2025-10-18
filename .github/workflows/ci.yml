@@ -25,8 +25,11 @@ jobs:
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Publish Resources to GitHub Release
-        run: >-
-          find Resources -name 'Assets.car' -or -name '*.icns' -print0
-          | xargs -0 gh release upload ${{ github.ref_name }}
+        run: |
+          gh release upload ${{ github.ref_name }} \
+            Resources/Assets.car \
+            LICENSE.md
+          find Resources -name '*.icns' -print0 \
+            | xargs -0 gh release upload ${{ github.ref_name }} \
         env:
           GH_TOKEN: ${{ github.token }}
