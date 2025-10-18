@@ -9,7 +9,7 @@
 [![Latest Release](https://img.shields.io/github/release/jimeh/emacs-liquid-glass-icons.svg)](https://github.com/jimeh/emacs-liquid-glass-icons/releases)
 [![GitHub Issues](https://img.shields.io/github/issues/jimeh/emacs-liquid-glass-icons.svg)](https://github.com/jimeh/emacs-liquid-glass-icons/issues)
 [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/jimeh/emacs-liquid-glass-icons.svg)](https://github.com/jimeh/emacs-liquid-glass-icons/pulls)
-[![License](https://img.shields.io/github/license/jimeh/emacs-liquid-glass-icons.svg)](https://github.com/jimeh/emacs-liquid-glass-icons/blob/main/LICENSE)
+[![License](https://img.shields.io/github/license/jimeh/emacs-liquid-glass-icons.svg)][LICENSE]
 
 </div>
 
@@ -83,9 +83,10 @@ the changes Apple has made to some of its own icons in macOS 26.
 
 ## License
 
-Licensed under GPL-3.0-or-later (see `LICENSE.md`).
+Licensed under GPL-3.0-or-later (see [`LICENSE.md`][LICENSE]).
 
 These icons are derivative works of [emacs.svg][], which is [licensed under
 GPL-3.0-or-later][upstream-license].
 
+[LICENSE]: https://github.com/jimeh/emacs-liquid-glass-icons/blob/main/LICENSE.md
 [upstream-license]: https://github.com/emacs-mirror/emacs/blob/emacs-30.1/etc/images/icons/README
