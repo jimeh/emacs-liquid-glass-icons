@@ -1,0 +1,461 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  cat >&2 << EOF
+Usage: $(basename "$0") [OPTIONS] <input1.png> <input2.png> [input3.png ...]
+
+Create a grid collage from multiple PNG images.
+
+OPTIONS:
+  -o, --output <file>     Output filename (default: collage.png)
+  --max-width <pixels>    Maximum width for grid cells (default: 1024)
+  --max-height <pixels>   Maximum height for grid cells (default: 1024)
+  --gap <pixels>          Gap between images (default: 0)
+  --border <pixels>       Border around entire collage (default: 0)
+  --max-columns <count>   Maximum columns in grid (default: auto)
+  --dpi <value>           DPI for output image (default: 72)
+  -h, --help              Show this help message
+
+ARGUMENTS:
+  At least 2 input PNG files are required.
+
+EXAMPLES:
+  $(basename "$0") img1.png img2.png
+  $(basename "$0") -o output.png --gap 10 img1.png img2.png img3.png
+  $(basename "$0") --output result.png --max-columns 3 *.png
+EOF
+}
+
+verify-png() {
+  local src="$1"
+  local fmt
+  fmt=$(sips -g format "$src" 2> /dev/null |
+    awk '/format/ {print tolower($2)}') || true
+  if [[ -z "$fmt" ]]; then
+    echo "Unable to determine image format with sips: $src" >&2
+    return 1
+  fi
+  if [[ "$fmt" != "png" ]]; then
+    echo "Input must be a PNG image: $src" >&2
+    return 1
+  fi
+}
+
+get-image-dimensions() {
+  local src="$1"
+  local w h
+
+  w=$(sips -g pixelWidth "$src" 2> /dev/null |
+    awk '/pixelWidth/ {print $2}') || true
+  h=$(sips -g pixelHeight "$src" 2> /dev/null |
+    awk '/pixelHeight/ {print $2}') || true
+
+  if [[ -z "$w" || -z "$h" ]]; then
+    echo "Failed to read image dimensions with sips: $src" >&2
+    return 1
+  fi
+
+  echo "$w $h"
+}
+
+calculate-cell-size() {
+  local max_w="$1"
+  local max_h="$2"
+  shift 2
+  local images=("$@")
+
+  local cell_w=0
+  local cell_h=0
+  local any_exceeds=0
+
+  for img in "${images[@]}"; do
+    local dims
+    if ! dims=$(get-image-dimensions "$img"); then
+      return 1
+    fi
+    local w h
+    read -r w h <<< "$dims"
+
+    if ((w > max_w || h > max_h)); then
+      any_exceeds=1
+    fi
+
+    if ((w > cell_w)); then
+      cell_w=$w
+    fi
+    if ((h > cell_h)); then
+      cell_h=$h
+    fi
+  done
+
+  # If any image exceeds max dimensions, use max dimensions as cell size
+  if ((any_exceeds)); then
+    if ((max_w > max_h)); then
+      echo "$max_w $max_w"
+    else
+      echo "$max_h $max_h"
+    fi
+  else
+    # Use largest dimension from all images to make square cells
+    if ((cell_w > cell_h)); then
+      echo "$cell_w $cell_w"
+    else
+      echo "$cell_h $cell_h"
+    fi
+  fi
+}
+
+calculate-padding() {
+  local row="$1"
+  local col="$2"
+  local total_rows="$3"
+  local total_cols="$4"
+  local gap="$5"
+  local border="$6"
+
+  local top bottom left right
+  local half_gap
+
+  # Calculate half gap (rounded for odd gaps)
+  half_gap=$(awk "BEGIN {print int($gap / 2)}")
+
+  # Top padding
+  if ((row == 0)); then
+    top=$border
+  else
+    top=$half_gap
+  fi
+
+  # Bottom padding
+  if ((row == total_rows - 1)); then
+    bottom=$border
+  else
+    bottom=$half_gap
+  fi
+
+  # Left padding
+  if ((col == 0)); then
+    left=$border
+  else
+    left=$half_gap
+  fi
+
+  # Right padding
+  if ((col == total_cols - 1)); then
+    right=$border
+  else
+    right=$half_gap
+  fi
+
+  echo "$top $bottom $left $right"
+}
+
+prepare-image() {
+  local src="$1"
+  local cell_size="$2"
+  local top="$3"
+  local bottom="$4"
+  local left="$5"
+  local right="$6"
+  local out="$7"
+
+  local tmp_resized tmp_padded
+  tmp_resized="${out}.tmp.resized.png"
+  tmp_padded="${out}.tmp.padded.png"
+
+  # Scale preserving aspect ratio; fit within cell size
+  sips -Z "$cell_size" "$src" --out "$tmp_resized" > /dev/null
+
+  # Pad to exact square dimensions centered on transparent background
+  sips --padToHeightWidth "$cell_size" "$cell_size" \
+    "$tmp_resized" --out "$tmp_padded" > /dev/null
+
+  # Apply asymmetric padding using ImageMagick
+  # Create a transparent canvas and composite the image at the correct position
+  local final_width final_height
+  final_width=$((cell_size + left + right))
+  final_height=$((cell_size + top + bottom))
+
+  # Create transparent canvas of final size, then composite the prepared
+  # image at position (left, top) to create the exact padding we want
+  if ! magick -size "${final_width}x${final_height}" xc:none \
+    "$tmp_padded" -geometry "+${left}+${top}" -composite \
+    "$out" 2> /dev/null; then
+    echo "Failed to apply padding to image: $src" >&2
+    rm -f "$tmp_resized" "$tmp_padded" || true
+    return 1
+  fi
+
+  rm -f "$tmp_resized" "$tmp_padded" || true
+}
+
+calculate-grid-dimensions() {
+  local count="$1"
+  local max_cols="$2"
+
+  local cols rows
+
+  if [[ "$max_cols" == "auto" ]]; then
+    # Calculate square-ish grid
+    cols=$(awk "BEGIN {print int(sqrt($count) + 0.999)}")
+  else
+    if ((max_cols > count)); then
+      cols=$count
+    else
+      cols=$max_cols
+    fi
+  fi
+
+  rows=$(awk "BEGIN {print int(($count + $cols - 1) / $cols)}")
+
+  echo "$cols $rows"
+}
+
+create-collage() {
+  local cols="$1"
+  local rows="$2"
+  local dpi="$3"
+  local out="$4"
+  shift 4
+  local images=("$@")
+
+  # Build ImageMagick montage command
+  # montage combines images in a grid with zero spacing
+  # (padding is already applied to individual images)
+  local tile_arg="${cols}x${rows}"
+
+  # Create collage with transparent background and zero spacing
+  if ! magick montage "${images[@]}" \
+    -tile "$tile_arg" \
+    -geometry "+0+0" \
+    -background "none" \
+    "$out" 2> /dev/null; then
+    echo "Failed to create collage with ImageMagick" >&2
+    return 1
+  fi
+
+  # Set DPI metadata
+  sips -s dpiHeight "$dpi" -s dpiWidth "$dpi" "$out" > /dev/null
+}
+
+cleanup() {
+  local path="$1"
+
+  if [[ -z "$path" || ! -d "$path" ]]; then
+    return 0
+  fi
+
+  # Remove generated PNGs inside the temp directory
+  find "$path" -type f -name '*.png' -delete 2> /dev/null || true
+
+  # Attempt to remove the temp directory if now empty
+  rmdir "$path" 2> /dev/null || true
+}
+
+parse-args() {
+  local max_width=1024
+  local max_height=1024
+  local gap=0
+  local border=0
+  local max_columns="auto"
+  local dpi=72
+  local output_file=""
+  local -a input_files=()
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -h | --help)
+        usage
+        exit 0
+        ;;
+      -o | --output)
+        output_file="$2"
+        shift 2
+        ;;
+      --max-width)
+        max_width="$2"
+        shift 2
+        ;;
+      --max-height)
+        max_height="$2"
+        shift 2
+        ;;
+      --gap)
+        gap="$2"
+        shift 2
+        ;;
+      --border)
+        border="$2"
+        shift 2
+        ;;
+      --max-columns)
+        max_columns="$2"
+        shift 2
+        ;;
+      --dpi)
+        dpi="$2"
+        shift 2
+        ;;
+      -*)
+        echo "Unknown option: $1" >&2
+        usage
+        exit 1
+        ;;
+      *)
+        input_files+=("$1")
+        shift
+        ;;
+    esac
+  done
+
+  # Export parsed values for main to access
+  export PARSED_MAX_WIDTH="$max_width"
+  export PARSED_MAX_HEIGHT="$max_height"
+  export PARSED_GAP="$gap"
+  export PARSED_BORDER="$border"
+  export PARSED_MAX_COLUMNS="$max_columns"
+  export PARSED_DPI="$dpi"
+  export PARSED_OUTPUT="$output_file"
+  export PARSED_INPUT_COUNT="${#input_files[@]}"
+
+  # Export input files as a string (will be parsed in main)
+  local i
+  for i in "${!input_files[@]}"; do
+    export "PARSED_INPUT_$i=${input_files[$i]}"
+  done
+}
+
+main() {
+  if [[ $# -lt 2 ]]; then
+    usage
+    exit 1
+  fi
+
+  # Parse arguments
+  parse-args "$@"
+
+  # Reconstruct input files array from exports
+  local -a all_files=()
+  local i
+  for ((i = 0; i < PARSED_INPUT_COUNT; i++)); do
+    local varname="PARSED_INPUT_$i"
+    all_files+=("${!varname}")
+  done
+
+  # Determine output file and input files
+  local -a input_files=()
+  local output_file
+
+  if [[ -n "$PARSED_OUTPUT" ]]; then
+    # Explicit output was specified via --output/-o
+    output_file="$PARSED_OUTPUT"
+    input_files=("${all_files[@]}")
+  else
+    # No explicit output, use default or check last argument
+    output_file="collage.png"
+    if [[ ${#all_files[@]} -ge 2 ]]; then
+      local last_file="${all_files[-1]}"
+      # If last file doesn't exist and has .png extension, treat as output
+      if [[ ! -f "$last_file" && "$last_file" == *.png ]]; then
+        output_file="$last_file"
+        input_files=("${all_files[@]:0:$((${#all_files[@]} - 1))}")
+      else
+        input_files=("${all_files[@]}")
+      fi
+    else
+      input_files=("${all_files[@]}")
+    fi
+  fi
+
+  # Validate we have at least 2 input files
+  if [[ ${#input_files[@]} -lt 2 ]]; then
+    echo "Error: At least 2 input PNG files are required." >&2
+    usage
+    exit 1
+  fi
+
+  # Check for required commands
+  if ! command -v sips > /dev/null 2>&1; then
+    echo "This script requires 'sips' (macOS) but it wasn't found." >&2
+    exit 1
+  fi
+
+  if ! command -v magick > /dev/null 2>&1; then
+    echo "This script requires 'magick' (ImageMagick) but it wasn't found." >&2
+    exit 1
+  fi
+
+  # Verify all input files exist and are PNGs
+  for img in "${input_files[@]}"; do
+    if [[ ! -f "$img" ]]; then
+      echo "Input file not found: $img" >&2
+      exit 1
+    fi
+    if ! verify-png "$img"; then
+      exit 1
+    fi
+  done
+
+  # Create output directory if needed
+  local outdir
+  outdir="$(dirname "$output_file")"
+  mkdir -p "$outdir"
+
+  # Create temporary working directory
+  tmp_root="$(mktemp -d 2> /dev/null || mktemp -d -t pngs2collage)"
+  trap 'cleanup "$tmp_root"' EXIT
+
+  # Calculate grid dimensions first
+  local grid_dims
+  grid_dims=$(calculate-grid-dimensions "${#input_files[@]}" \
+    "$PARSED_MAX_COLUMNS")
+  local cols rows
+  read -r cols rows <<< "$grid_dims"
+
+  # Calculate cell size
+  local cell_dims
+  if ! cell_dims=$(calculate-cell-size "$PARSED_MAX_WIDTH" \
+    "$PARSED_MAX_HEIGHT" "${input_files[@]}"); then
+    exit 1
+  fi
+  local cell_size
+  read -r cell_size _ <<< "$cell_dims"
+
+  # Prepare all images with position-specific padding
+  local -a prepared_images=()
+  local idx=0
+  for img in "${input_files[@]}"; do
+    # Calculate grid position (row, col) from index
+    local row col
+    row=$((idx / cols))
+    col=$((idx % cols))
+
+    # Calculate padding for this position
+    local padding
+    padding=$(calculate-padding "$row" "$col" "$rows" "$cols" \
+      "$PARSED_GAP" "$PARSED_BORDER")
+    local top bottom left right
+    read -r top bottom left right <<< "$padding"
+
+    # Prepare image with position-specific padding
+    local prepared="${tmp_root}/prepared_${idx}.png"
+    if ! prepare-image "$img" "$cell_size" "$top" "$bottom" "$left" \
+      "$right" "$prepared"; then
+      echo "Failed to prepare image: $img" >&2
+      exit 1
+    fi
+    prepared_images+=("$prepared")
+    idx=$((idx + 1))
+  done
+
+  # Create the collage
+  if ! create-collage "$cols" "$rows" "$PARSED_DPI" "$output_file" \
+    "${prepared_images[@]}"; then
+    exit 1
+  fi
+
+  echo "Done. Collage written to: $output_file"
+}
+
+main "$@"

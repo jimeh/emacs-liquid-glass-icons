@@ -62,21 +62,21 @@ be left alone.
 EmacsLG1 simplifies and changes the outer shape of the default icon to comply
 with the shape of Liquid Glass icons.
 
-![EmacsLG1 Preview](https://raw.githubusercontent.com/jimeh/emacs-liquid-glass-icons/refs/heads/main/img/preview-lg1.png)
+![EmacsLG1 Preview](https://raw.githubusercontent.com/jimeh/emacs-liquid-glass-icons/refs/heads/main/img/EmacsLG1-preview.png)
 
 ### EmacsLG2
 
 EmacsLG2 stays as close to the original round icon as possible, while giving it
 that Liquid Glass flair.
 
-![EmacsLG1 Preview](https://raw.githubusercontent.com/jimeh/emacs-liquid-glass-icons/refs/heads/main/img/preview-lg2.png)
+![EmacsLG1 Preview](https://raw.githubusercontent.com/jimeh/emacs-liquid-glass-icons/refs/heads/main/img/EmacsLG2-preview.png)
 
 ### EmacsLG3
 
 EmacsLG3 is the biggest divergence from Emacs' default icon, and is inspired by
 the changes Apple has made to some of its own icons in macOS 26.
 
-![EmacsLG1 Preview](https://raw.githubusercontent.com/jimeh/emacs-liquid-glass-icons/refs/heads/main/img/preview-lg3.png)
+![EmacsLG1 Preview](https://raw.githubusercontent.com/jimeh/emacs-liquid-glass-icons/refs/heads/main/img/EmacsLG3preview.png)
 
 ## License
 
