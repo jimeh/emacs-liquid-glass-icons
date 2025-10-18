@@ -1,0 +1,177 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  echo "Usage: $(basename "$0") <source.png> [output.icns]" >&2
+}
+
+gen-png() {
+  local src="$1"
+  local px="$2"
+  local dpi="$3"
+  local out="$4"
+
+  # Resize longest side to <px>, then pad to a square <px>x<px> with transparency.
+  local tmp_resized
+  tmp_resized="${out}.tmp.png"
+
+  # Scale preserving aspect ratio; longest side becomes <px>.
+  sips -Z "$px" "$src" --out "$tmp_resized" > /dev/null
+
+  # Pad to exact square dimensions centered on transparent background.
+  sips --padToHeightWidth "$px" "$px" \
+    "$tmp_resized" --out "$out" > /dev/null
+
+  rm -f "$tmp_resized" || true
+
+  # Set DPI metadata.
+  sips -s dpiHeight "$dpi" -s dpiWidth "$dpi" "$out" > /dev/null
+}
+
+get-image-max-dim() {
+  local src="$1"
+  local w h
+
+  # Capture width/height; avoid exiting on failure due to set -e/pipefail.
+  w=$(sips -g pixelWidth "$src" 2> /dev/null |
+    awk '/pixelWidth/ {print $2}') || true
+  h=$(sips -g pixelHeight "$src" 2> /dev/null |
+    awk '/pixelHeight/ {print $2}') || true
+
+  if [[ -z "$w" || -z "$h" ]]; then
+    echo "Failed to read image dimensions with sips: $src" >&2
+    return 1
+  fi
+
+  if ((w > h)); then
+    echo "$w"
+  else
+    echo "$h"
+  fi
+}
+
+verify-png() {
+  local src="$1"
+  local fmt
+  fmt=$(sips -g format "$src" 2> /dev/null |
+    awk '/format/ {print tolower($2)}') || true
+  if [[ -z "$fmt" ]]; then
+    echo "Unable to determine image format with sips: $src" >&2
+    return 1
+  fi
+  if [[ "$fmt" != "png" ]]; then
+    echo "Input must be a PNG image: $src" >&2
+    return 1
+  fi
+}
+
+make-iconset() {
+  local src="$1"
+  local dest_dir="$2"
+
+  mkdir -p "$dest_dir"
+
+  # Sizes to generate (@1x). @2x files are double the pixels.
+  local sizes=(16 32 128 256 512)
+
+  # Determine maximum source dimension to avoid upscaling.
+  local src_max
+  if ! src_max=$(get-image-max-dim "$src"); then
+    return 1
+  fi
+
+  local generated
+  generated=0
+
+  for sz in "${sizes[@]}"; do
+    # @1x
+    local out1="${dest_dir}/icon_${sz}x${sz}.png"
+    if ((sz <= src_max)); then
+      gen-png "$src" "$sz" 72 "$out1"
+      generated=$((generated + 1))
+    fi
+
+    # @2x (double pixels, higher DPI)
+    local dsz=$((sz * 2))
+    local out2="${dest_dir}/icon_${sz}x${sz}@2x.png"
+    if ((dsz <= src_max)); then
+      gen-png "$src" "$dsz" 144 "$out2"
+      generated=$((generated + 1))
+    fi
+  done
+
+  if ((generated == 0)); then
+    echo "Source image too small; no icon sizes generated: $src" >&2
+    return 1
+  fi
+}
+
+cleanup() {
+  local path="$1"
+
+  if [[ -z "$path" || ! -d "$path" ]]; then
+    return 0
+  fi
+
+  # Remove generated PNGs inside the temp directory
+  find "$path" -type f -name '*.png' -delete 2> /dev/null || true
+
+  # Remove generated `*.iconset` inside the temp directory
+  find "$path" -type d -name '*.iconset' -delete 2> /dev/null || true
+
+  # Attempt to remove the temp directory if now empty
+  rmdir "$path" 2> /dev/null || true
+}
+
+main() {
+  if [[ $# -lt 1 || $# -gt 2 ]]; then
+    usage
+    exit 1
+  fi
+
+  local src="$1"
+  local out="${2:-${src%.*}.icns}"
+
+  if [[ ! -f "$src" ]]; then
+    echo "Source file not found: $src" >&2
+    exit 1
+  fi
+
+  if ! command -v sips > /dev/null 2>&1; then
+    echo "This script requires 'sips' (macOS) but it wasn't found." >&2
+    exit 1
+  fi
+
+  if ! command -v iconutil > /dev/null 2>&1; then
+    echo "This script requires 'iconutil' (macOS) but it wasn't found." >&2
+    exit 1
+  fi
+
+  local outdir
+  outdir="$(dirname "$out")"
+  mkdir -p "$outdir"
+
+  # Create a temporary working directory
+  tmp_root="$(mktemp -d 2> /dev/null || mktemp -d -t png2icns)"
+  trap 'cleanup "$tmp_root"' EXIT
+
+  # Verify input is PNG; we do not accept other formats.
+  if ! verify-png "$src"; then
+    exit 1
+  fi
+
+  local iconset_dir
+  iconset_dir="${tmp_root}/icon.iconset"
+
+  make-iconset "$src" "$iconset_dir"
+
+  # Build `.icns` from the generated iconset
+  if ! iconutil -c icns -o "$out" "$iconset_dir" 2> /dev/null; then
+    echo "Failed to create .icns with iconutil" >&2
+    exit 1
+  fi
+
+  echo "Done. ICNS written to: $out"
+}
+
+main "$@"
