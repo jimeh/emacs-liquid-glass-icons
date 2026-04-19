@@ -26,6 +26,16 @@ A series of `*.icns` files are provided for macOS 15 and earlier, and a
 
 ## Usage
 
+### TLDR
+
+Open Terminal.app (or any other terminal application you have), copy the command below, and press Enter.
+
+``` shell
+curl -fsSL https://github.com/jimeh/emacs-liquid-glass-icons/raw/refs/heads/main/patch-emacs-icon.sh | bash -s -- LG1 /Applications/Emacs.app
+```
+
+(Change the `LG1` argument to your preferred icon [available options: `LG1`, `LG2`, or `LG3`], and update `/Applications/Emacs.app` to your Emacs installation path if it is not in the standard location.)
+
 ### macOS 15 and earlier
 
 Grab the `.icns` file you prefer from the `Resources` directory, and replace
